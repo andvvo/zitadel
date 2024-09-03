@@ -19,13 +19,48 @@ import (
 )
 
 type Migration struct {
-	Source      database.Config
-	Destination database.Config
+	Source      Location
+	Destination Location
 
 	EventBulkSize uint32
 
 	Log     *logging.Config
 	Machine *id.Config
+}
+
+func (m *Migration) SourceName() string {
+	name := m.Source.Name()
+	if name == "" {
+		logging.Fatal("source not defined")
+	}
+	return name
+}
+
+func (m *Migration) DestinationName() string {
+	name := m.Destination.Name()
+	if name == "" {
+		logging.Fatal("destination not defined")
+	}
+	return name
+}
+
+type Location struct {
+	File     *fileLocation
+	Database *database.Config
+}
+
+func (l *Location) Name() string {
+	switch {
+	case l.File != nil:
+		return l.File.Path
+	case l.Database != nil:
+		return l.Database.DatabaseName()
+	}
+	return ""
+}
+
+type fileLocation struct {
+	Path string
 }
 
 var (

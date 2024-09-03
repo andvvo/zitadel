@@ -116,6 +116,7 @@ type Steps struct {
 	s29FillFieldsForProjectGrant           *FillFieldsForProjectGrant
 	s30FillFieldsForOrgDomainVerified      *FillFieldsForOrgDomainVerified
 	s31AddAggregateIndexToFields           *AddAggregateIndexToFields
+	s32EventPositionDefault                *EventPositionDefault
 }
 
 func MustNewSteps(v *viper.Viper) *Steps {

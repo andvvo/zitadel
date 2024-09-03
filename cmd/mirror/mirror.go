@@ -117,9 +117,6 @@ func mirrorFlags(cmd *cobra.Command) {
 
 func instanceClause() string {
 	if isSystem {
-		if isSrcFile || isDestFile {
-			return ""
-		}
 		return "WHERE instance_id <> ''"
 	}
 	for i := range instanceIDs {
