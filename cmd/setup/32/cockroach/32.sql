@@ -1,0 +1,1 @@
+ALTER TABLE eventstore.events2 ALTER COLUMN position SET DEFAULT cluster_logical_timestamp()
