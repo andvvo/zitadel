@@ -38,23 +38,23 @@ Only auth requests are mirrored`,
 func copyAuth(ctx context.Context, config *Migration) {
 	switch {
 	case isSrcFile:
-		destClient, err := db.Connect(config.Destination, false, dialect.DBPurposeEventPusher)
+		destClient, err := db.Connect(*config.Destination.Database, false, dialect.DBPurposeEventPusher)
 		logging.OnError(err).Fatal("unable to connect to destination database")
 		defer destClient.Close()
 
 		copyAuthRequestsFromFile(ctx, destClient, "auth.auth_requests.csv")
 	case isDestFile:
-		sourceClient, err := db.Connect(config.Source, false, dialect.DBPurposeQuery)
+		sourceClient, err := db.Connect(*config.Source.Database, false, dialect.DBPurposeQuery)
 		logging.OnError(err).Fatal("unable to connect to source database")
 		defer sourceClient.Close()
 
 		copyAuthRequestsToFile(ctx, sourceClient, "auth.auth_requests.csv")
 	default:
-		sourceClient, err := db.Connect(config.Source, false, dialect.DBPurposeQuery)
+		sourceClient, err := db.Connect(*config.Source.Database, false, dialect.DBPurposeQuery)
 		logging.OnError(err).Fatal("unable to connect to source database")
 		defer sourceClient.Close()
 
-		destClient, err := db.Connect(config.Destination, false, dialect.DBPurposeEventPusher)
+		destClient, err := db.Connect(*config.Destination.Database, false, dialect.DBPurposeEventPusher)
 		logging.OnError(err).Fatal("unable to connect to destination database")
 		defer destClient.Close()
 

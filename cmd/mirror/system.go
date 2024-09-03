@@ -38,25 +38,25 @@ Only keys and assets are mirrored`,
 func copySystem(ctx context.Context, config *Migration) {
 	switch {
 	case isSrcFile:
-		destClient, err := db.Connect(config.Destination, false, dialect.DBPurposeEventPusher)
+		destClient, err := db.Connect(*config.Destination.Database, false, dialect.DBPurposeEventPusher)
 		logging.OnError(err).Fatal("unable to connect to destination database")
 		defer destClient.Close()
 
 		copyAssetsFromFile(ctx, destClient, "system.assets.csv")
 		copyEncryptionKeysFromFile(ctx, destClient, "system.encryption_keys.csv")
 	case isDestFile:
-		sourceClient, err := db.Connect(config.Source, false, dialect.DBPurposeQuery)
+		sourceClient, err := db.Connect(*config.Source.Database, false, dialect.DBPurposeQuery)
 		logging.OnError(err).Fatal("unable to connect to source database")
 		defer sourceClient.Close()
 
 		copyAssetsToFile(ctx, sourceClient, "system.assets.csv")
 		copyEncryptionKeysToFile(ctx, sourceClient, "system.encryption_keys.csv")
 	default:
-		sourceClient, err := db.Connect(config.Source, false, dialect.DBPurposeQuery)
+		sourceClient, err := db.Connect(*config.Source.Database, false, dialect.DBPurposeQuery)
 		logging.OnError(err).Fatal("unable to connect to source database")
 		defer sourceClient.Close()
 
-		destClient, err := db.Connect(config.Destination, false, dialect.DBPurposeEventPusher)
+		destClient, err := db.Connect(*config.Destination.Database, false, dialect.DBPurposeEventPusher)
 		logging.OnError(err).Fatal("unable to connect to destination database")
 		defer destClient.Close()
 

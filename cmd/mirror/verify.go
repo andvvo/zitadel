@@ -44,11 +44,11 @@ func verifyMigration(ctx context.Context, config *Migration) {
 }
 
 func verifyMigrationDB(ctx context.Context, config *Migration) {
-	sourceClient, err := database.Connect(config.Source, false, dialect.DBPurposeQuery)
+	sourceClient, err := database.Connect(*config.Source.Database, false, dialect.DBPurposeQuery)
 	logging.OnError(err).Fatal("unable to connect to source database")
 	defer sourceClient.Close()
 
-	destClient, err := database.Connect(config.Destination, false, dialect.DBPurposeEventPusher)
+	destClient, err := database.Connect(*config.Destination.Database, false, dialect.DBPurposeEventPusher)
 	logging.OnError(err).Fatal("unable to connect to destination database")
 	defer destClient.Close()
 
@@ -72,7 +72,7 @@ func verifyFileMigration(ctx context.Context, config *Migration) {
 	var equalCount int64
 
 	if isDestFile {
-		sourceClient, err := database.Connect(config.Source, false, dialect.DBPurposeQuery)
+		sourceClient, err := database.Connect(*config.Source.Database, false, dialect.DBPurposeQuery)
 		logging.OnError(err).Fatal("unable to connect to source database")
 		defer sourceClient.Close()
 
@@ -100,7 +100,7 @@ func verifyFileMigration(ctx context.Context, config *Migration) {
 	}
 
 	if isSrcFile {
-		destClient, err := database.Connect(config.Destination, false, dialect.DBPurposeQuery)
+		destClient, err := database.Connect(*config.Destination.Database, false, dialect.DBPurposeQuery)
 		logging.OnError(err).Fatal("unable to connect to destination database")
 		defer destClient.Close()
 
